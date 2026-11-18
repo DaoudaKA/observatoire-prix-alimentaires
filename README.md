@@ -156,3 +156,4 @@ tests/            jeu de données factice (CI uniquement) et tests de l'agent
 ---
 
 *Stack : Python · DuckDB · dbt · Dagster · GitHub Actions · statsmodels · ECharts · Leaflet · Vercel · Claude API*
+"# observatoire-prix-alimentaires" 
