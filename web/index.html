@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Observatoire des prix alimentaires — Sénégal & Afrique de l'Ouest</title>
+  <meta name="description" content="Suivi des prix alimentaires sur les marchés du Sénégal et d'Afrique de l'Ouest : évolution, alertes de flambée, inflation, prévisions et analyste IA.">
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-inner">
+    <div>
+      <p class="eyebrow">Observatoire · Données WFP / HDX</p>
+      <h1>Prix alimentaires au Sénégal et en Afrique de l'Ouest</h1>
+      <p class="lede">Où et quand les prix des denrées de base flambent-ils ? Suivi mensuel de plus de 9 pays,
+        détection des hausses anormales et prévisions à 3 mois.</p>
+    </div>
+    <div class="controls">
+      <label>Pays
+        <select id="country"></select>
+      </label>
+      <p class="fresh" id="fresh"></p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="kpis" id="kpis" aria-label="Indicateurs clés"></section>
+
+  <section class="card span-2" aria-labelledby="t-evol">
+    <div class="card-head">
+      <div>
+        <h2 id="t-evol">Évolution du prix national</h2>
+        <p class="sub" id="evol-sub">Médiane des marchés, prix de détail. La zone en pointillé est la prévision à 3 mois (intervalle à 80 %).</p>
+      </div>
+      <div class="filters">
+        <label>Produit <select id="commodity"></select></label>
+        <div class="seg" role="group" aria-label="Période">
+          <button data-range="24">2 ans</button><button data-range="60" class="on">5 ans</button><button data-range="0">Tout</button>
+        </div>
+        <button class="ghost" data-table="chart-evol">Tableau</button>
+      </div>
+    </div>
+    <div id="chart-evol" class="chart"></div>
+    <div class="table-view" id="chart-evol-table" hidden></div>
+    <p class="note" id="fc-note"></p>
+  </section>
+
+  <section class="card" aria-labelledby="t-map">
+    <div class="card-head">
+      <div>
+        <h2 id="t-map">Carte des alertes de prix</h2>
+        <p class="sub" id="map-sub">Niveau le plus élevé par marché, dernier mois disponible.</p>
+      </div>
+    </div>
+    <div id="map" class="map" role="img" aria-label="Carte des marchés colorés par niveau d'alerte"></div>
+    <ul class="legend-status" id="map-legend"></ul>
+  </section>
+
+  <section class="card" aria-labelledby="t-alerts">
+    <div class="card-head">
+      <div>
+        <h2 id="t-alerts">Plus fortes hausses anormales</h2>
+        <p class="sub">Écart au prix attendu compte tenu de la tendance et de la saison (méthode inspirée de l'ALPS du WFP).</p>
+      </div>
+    </div>
+    <div class="alert-list" id="alert-list"></div>
+  </section>
+
+  <section class="card" aria-labelledby="t-markets">
+    <div class="card-head">
+      <div>
+        <h2 id="t-markets">Prix par marché</h2>
+        <p class="sub" id="markets-sub"></p>
+      </div>
+      <button class="ghost" data-table="chart-markets">Tableau</button>
+    </div>
+    <div id="chart-markets" class="chart tall"></div>
+    <div class="table-view" id="chart-markets-table" hidden></div>
+  </section>
+
+  <section class="card" aria-labelledby="t-cmp">
+    <div class="card-head">
+      <div>
+        <h2 id="t-cmp">Comparaison régionale</h2>
+        <p class="sub">Prix moyen sur les 12 derniers mois, en dollars US pour comparer les monnaies.</p>
+      </div>
+      <label>Produit <select id="cmp-commodity"></select></label>
+    </div>
+    <div id="chart-cmp" class="chart tall"></div>
+  </section>
+
+  <section class="card span-2" aria-labelledby="t-infl">
+    <div class="card-head">
+      <div>
+        <h2 id="t-infl">Inflation alimentaire comparée</h2>
+        <p class="sub">Médiane des variations annuelles des produits suivis (approximation, pas l'indice officiel des prix). 4 pays au plus.</p>
+      </div>
+      <div class="chips" id="infl-countries" role="group" aria-label="Pays comparés"></div>
+    </div>
+    <div id="chart-infl" class="chart"></div>
+  </section>
+
+  <section class="card span-2 agent" id="agent" aria-labelledby="t-agent">
+    <div class="card-head">
+      <div>
+        <h2 id="t-agent">Demandez à l'analyste IA</h2>
+        <p class="sub">Posez votre question en français : l'agent interroge la base de données, calcule et répond, avec graphique si utile.</p>
+      </div>
+    </div>
+    <div class="suggest" id="suggest"></div>
+    <div class="chat" id="chat" aria-live="polite"></div>
+    <form id="ask" class="ask">
+      <input id="q" type="text" maxlength="600" placeholder="Ex. : Quel est le prix du riz importé à Thiès ce mois-ci ?" autocomplete="off">
+      <button type="submit">Envoyer</button>
+    </form>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p>Données : WFP / HDX · Réalisé par <strong>Daouda Ka</strong> · <a href="https://portfolio-daouda-ka.vercel.app/">Portfolio</a></p>
+</footer>
+
+<script src="vendor/echarts.min.js"></script>
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

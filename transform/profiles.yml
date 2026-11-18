@@ -1,0 +1,7 @@
+observatoire_prix:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('WAREHOUSE', '../data/warehouse.duckdb') }}"
+      threads: 4

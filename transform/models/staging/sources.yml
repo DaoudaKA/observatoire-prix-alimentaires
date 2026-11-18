@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Données brutes chargées par ingestion/ingest.py depuis HDX (WFP Food Prices).
+    tables:
+      - name: wfp_prices
+        description: Une ligne par relevé de prix (marché × produit × date) tel que publié par le WFP.
+      - name: countries
+        description: Référentiel des pays suivis (ISO3, nom français).

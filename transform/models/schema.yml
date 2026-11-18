@@ -1,0 +1,82 @@
+version: 2
+
+models:
+  - name: stg_wfp_prices
+    description: Relevés WFP nettoyés, typés, prix ramenés à l'unité de base.
+    columns:
+      - name: country_iso3
+        tests: [not_null]
+      - name: price_date
+        tests: [not_null]
+      - name: price_per_unit
+        tests:
+          - not_null
+          - dbt_utils_positive
+
+  - name: dim_country
+    description: Pays suivis et couverture temporelle.
+    columns:
+      - name: country_iso3
+        tests: [unique, not_null]
+
+  - name: dim_market
+    description: Marchés suivis (région, département, coordonnées).
+    columns:
+      - name: market_key
+        tests: [unique, not_null]
+
+  - name: dim_commodity
+    description: Produits, catégories et libellés en français.
+    columns:
+      - name: commodity_key
+        tests: [unique, not_null]
+      - name: commodity_fr
+        tests: [not_null]
+
+  - name: dim_date
+    description: Calendrier mensuel ; is_lean_season marque la période de soudure (juillet-octobre).
+    columns:
+      - name: month_date
+        tests: [unique, not_null]
+
+  - name: fct_prices
+    description: Prix moyen mensuel par marché, produit, unité, type de prix et devise.
+    columns:
+      - name: market_key
+        tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_market'), field: market_key}}
+      - name: commodity_key
+        tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_commodity'), field: commodity_key}}
+      - name: price
+        tests: [not_null, dbt_utils_positive]
+    tests:
+      - unique_combination:
+          arguments:
+            columns: [market_key, commodity_key, unit, price_type, currency, month_date]
+
+  - name: int_prices_flagged
+    description: Prix mensuels avec indicateur de valeur aberrante (pic isolé vs médiane mobile 7 mois).
+
+  - name: qa_price_outliers
+    description: Relevés écartés par le contrôle qualité, pour audit.
+
+  - name: mart_national_monthly
+    description: Prix national (médiane des marchés) avec variations mensuelle (mom_pct) et annuelle (yoy_pct).
+
+  - name: mart_price_alerts
+    description: Score de flambée par marché × produit × mois (inspiré de l'ALPS du WFP).
+    columns:
+      - name: alert_level
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Normal', 'Stress', 'Alerte', 'Crise']
+
+  - name: mart_food_inflation
+    description: Inflation alimentaire approchée par pays et par mois.
+
+  - name: mart_country_comparison
+    description: Prix moyens en USD sur 12 mois, comparables entre pays.

@@ -1,0 +1,27 @@
+name: observatoire_prix
+version: "1.0.0"
+config-version: 2
+profile: observatoire_prix
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  observatoire_prix:
+    staging:
+      +schema: staging
+      +materialized: view
+    core:
+      +schema: core
+      +materialized: table
+    marts:
+      +schema: marts
+      +materialized: table
+
+seeds:
+  observatoire_prix:
+    +schema: ref

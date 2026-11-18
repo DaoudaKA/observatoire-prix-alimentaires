@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths-ignore: ["web/data/**", "data/**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt pytest
+      - name: Pipeline sur jeu de test (sans réseau)
+        env:
+          RAW_DIR: tests/fixtures
+          WAREHOUSE: ${{ runner.temp }}/ci.duckdb
+          WEB_DATA_DIR: ${{ runner.temp }}/web
+          DBT_SEND_ANONYMOUS_USAGE_STATS: "false"
+        run: |
+          python -m tests.make_fixture tests/fixtures
+          python -m ingestion.ingest
+          (cd transform && dbt build --profiles-dir .)
+          python -m pipeline.forecast
+          python -m pipeline.export
+          pytest -q tests

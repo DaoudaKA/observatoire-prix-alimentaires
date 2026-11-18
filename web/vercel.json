@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "api/agent.py": {
+      "maxDuration": 60,
+      "memory": 1024,
+      "includeFiles": "data/observatoire.duckdb"
+    }
+  },
+  "headers": [
+    { "source": "/data/(.*)\\.json", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }
+  ]
+}
